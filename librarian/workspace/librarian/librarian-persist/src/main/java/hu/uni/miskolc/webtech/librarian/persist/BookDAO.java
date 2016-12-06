@@ -19,5 +19,6 @@ public interface BookDAO {
 	
 	public void deleteBook(Book book) throws BookNotFoundException;
 	public void deleteBook(int bookId) throws BookNotFoundException;
+	public void insertBook(String title);
 
 }

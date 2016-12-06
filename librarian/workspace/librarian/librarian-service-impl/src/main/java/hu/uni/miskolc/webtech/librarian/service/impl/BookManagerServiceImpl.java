@@ -75,4 +75,16 @@ public class BookManagerServiceImpl implements BookManagerService {
 		return bookDAO.readBooks(author);
 	}
 
+	public Collection<Book> queryBooks(String title) {
+		return bookDAO.readBooks(title);
+	}
+
+	public Collection<Author> queryAuthorsByName(String name) {
+		return authorDAO.readAuthorByName(name);
+	}
+
+	public void insertBook(String title) {
+		bookDAO.insertBook(title);
+	}
+
 }

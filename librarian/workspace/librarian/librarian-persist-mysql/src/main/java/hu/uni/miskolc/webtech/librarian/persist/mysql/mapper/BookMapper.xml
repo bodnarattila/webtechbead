@@ -69,6 +69,10 @@
 		update book set title = #{book.title} where bookId = #{book.bookId};
 	</update>
 	
+	<insert id="insertBook">
+		insert into book(title) values(#{title});
+	</insert>
+	
 	
 
 	

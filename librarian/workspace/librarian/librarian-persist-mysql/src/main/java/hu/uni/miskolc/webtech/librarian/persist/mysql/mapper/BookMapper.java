@@ -32,5 +32,6 @@ public interface BookMapper {
 	void insertAuthorForBook(@Param("bookId") int bookId, @Param("authorId") int authorId);
 	void insertGenreForBook(@Param("genre") Genre genre, @Param("bookId") int bookId);
 	void updateBook(@Param("book") Book book);
+	void insertBook(@Param("title") String title);
 	
 }

@@ -165,4 +165,15 @@ public class BookDAOImpl implements BookDAO {
 
 	}
 
+	public void insertBook(String title) {
+		SqlSession session = sqlSessionFactory.openSession();
+		try {
+			BookMapper mapper = session.getMapper(BookMapper.class);
+			mapper.insertBook(title);
+		} finally {
+			session.close();
+		}
+
+	}
+
 }

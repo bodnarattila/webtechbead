@@ -11,12 +11,15 @@ public interface BookManagerService {
 	public void updateAuthor(Author author) throws AuthorManipulationException;
 	
 	public Collection<Author> queryAuthors();
+	public Collection<Author> queryAuthorsByName(String name);
 	
 	public void addBook(Book book);
 	public void updateBook(Book book);
 	
 	public Collection<Book> queryBooks();
+	public Collection<Book> queryBooks(String title);
 	public Collection<Book> queryBooks(Author author);
+	public void insertBook(String title);
 	
 
 }

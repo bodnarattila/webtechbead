@@ -1,5 +1,261 @@
 <html>
+<head>
+<script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
+</head>
 <body>
-<h2>Hello World!</h2>
+	<div id="listBy">
+		<form action="">
+		  	<fieldset>
+		    <legend>Search archive:</legend>
+		    Search author filter:<br>
+		    <input type="text" name="authorname" value="Shakespeare"/>
+		    <button id="listFilteredAuthorsButton" type="button" onclick="authorsByName(authorname.value)">Search authors!</button>
+		    <button id="listAllAuthorsButton" type="button" onclick="listAllAuthors()">List all authors!</button>
+		    <button id="createAuthor" type="button" onclick="createFormForAuthor()">Create new author!</button><br>
+		    <br>
+		    Browse :<br>
+		    <input type="text" name="bookname" value="Romeo and Juliet"/>
+		    <button id="listFilteredBooksButton" type="button" onclick="booksByTitle(bookname.value)">Search books!</button>
+		    <button id="listAllBooksButton" type="button" onclick="listAllBooks()">List all books!</button>
+		    <button id="createBook" type="button" onclick="createFormForBook()">Create new book!</button><br>
+		    <br>
+		  </fieldset>		 
+		</form>
+	</div>
+	<div id="results">Results:</div>
+	<div id="create"></div>
 </body>
+<script type="text/javascript">
+
+	function createFormForBook(){
+		document.getElementById("create").innerHTML = "<form>" +
+		"<table><th>New Book</th>"+
+		"<tr><td>Title</td><td><input type='text' name='booktitle'/></td></tr>"+
+		"<tr><td colspan='2'><button name='createBook' onclick='submitNewBook(booktitle.value)'>Create</button></td></tr>"+
+		"</tr><table>"+
+		"</form>";
+		
+	}
+
+
+	function createFormForAuthor(){
+		document.getElementById("create").innerHTML = "<form>" +
+		"<table><th>New Author</th>"+
+		"<tr><td>Name</td><td><input type='text' name='outname'/></td></tr>"+
+		"<tr><td>Nat</td><td><input type='text' name='outnat'/></td></tr>"+
+		"<tr><td>Birth Date (yyyy-mm-dd)</td><td><input type='text' name='outbirth'/></td></tr>"+
+		"<tr><td colspan='2'><button name='create' onclick='submitNewAuthor(outname.value,outnat.value,outbirth.value)'>Create</button></td></tr>"+
+		"</tr><table>"+
+		"</form>";
+		
+	}
+	
+	function submitNewAuthor(outname,outnat,outbirth){
+		var http_request = new XMLHttpRequest();			
+
+		
+		
+		http_request.onreadystatechange = function() {
+		    if (this.readyState == 4) {
+		    	listAllAuthors();	     
+		    }
+		}
+		http_request.open("POST","http://localhost:8080/librarian-web/author/insert", true);
+		http_request.setRequestHeader("Content-Type","application/json");
+		var reqJson=JSON.stringify({"authorID":1,"name": outname,"nationality":outnat,"birthDate": outbirth});
+		http_request.send(reqJson);
+		
+	}
+	
+	function submitNewBook(bookname){
+		var data_file = "http://localhost:8080/librarian-web/insertBook/" + bookname;
+		var http_request = new XMLHttpRequest();			
+
+		
+		
+		http_request.onreadystatechange = function() {
+		    if (this.readyState == 4) {
+		    	listAllBooks();	     
+		    }
+		}
+		
+		http_request.open("POST",data_file, true);
+		http_request.send();
+				
+	}
+	
+	
+	
+
+//----------------------------------------------------------------------------------
+	
+	function authorsByName(authorname){
+		var data_file = "http://localhost:8080/librarian-web/authorsByName/" + authorname;
+		var http_request = new XMLHttpRequest();
+		
+		
+			http_request.onreadystatechange = function() {
+			    if (this.readyState == 4) {
+			     //document.getElementById("results").innerHTML = this.responseText;
+			     //createListingEnvironment();
+			    
+			     	var jsonObj = JSON.parse(http_request.responseText);
+			     	var i;
+			     	var l = jsonObj.length;
+			     	//var href = "http://localhost:8080/librarian-web/";
+			     	//alert(l);
+			     	
+			     	document.getElementById("results").innerHTML = "<h2>Authors</h2>";
+			     	document.getElementById("results").innerHTML += "<ul>";
+			     	for(i in jsonObj){
+			     		var authorlink = "http://localhost:8080/librarian-web/booksByAuthorId/"+ jsonObj[i]['authorID'];
+			     		results.innerHTML += "<li><a onclick=" + "getBooksByAuthorId(" +jsonObj[i]['authorID']+")>"+(jsonObj[i]['name'])+"</a></li>";
+			     	}
+			     	document.getElementById("results").innerHTML += "</ul>";
+			     	//document.getElementById("results").innerHTML += "<p>Proba</p>";
+			     
+			    }
+			}
+			
+
+		http_request.open("GET", data_file, true);
+		http_request.send();
+	}
+	
+	function getBooksByAuthorId(authorID){
+		var data_file = "http://localhost:8080/librarian-web/booksByAuthorId/" + authorID;
+		var http_request = new XMLHttpRequest();
+		
+		
+			http_request.onreadystatechange = function() {
+			    if (this.readyState == 4) {
+			     //document.getElementById("results").innerHTML = this.responseText;
+			     //createListingEnvironment();
+			    
+			     	var jsonObj = JSON.parse(http_request.responseText);
+			     	var i;
+			     	var l = jsonObj.length;
+			     	//var href = "http://localhost:8080/librarian-web/";
+			     	//alert(l);
+			     	
+			     	document.getElementById("results").innerHTML = "<h2>Books</h2>";
+			     	document.getElementById("results").innerHTML += "<ul>";
+			     	for(i in jsonObj){
+			     		results.innerHTML += "<li>"+(jsonObj[i]['title'])+"</li>";;
+			     	
+			     	}
+			     	document.getElementById("results").innerHTML += "</ul>";
+			     	//document.getElementById("results").innerHTML += "<p>Proba</p>";
+			     
+			    }
+			}
+			
+
+		http_request.open("GET", data_file, true);
+		http_request.send();
+	}
+	
+	
+	function listAllAuthors(){
+		var data_file = "http://localhost:8080/librarian-web/authors";
+		var http_request = new XMLHttpRequest();
+		
+		
+			http_request.onreadystatechange = function() {
+			    if (this.readyState == 4) {
+			     //document.getElementById("results").innerHTML = this.responseText;
+			     //createListingEnvironment();
+			    
+			     	var jsonObj = JSON.parse(http_request.responseText);
+			     	var i;
+			     	var l = jsonObj.length;
+			     	//var href = "http://localhost:8080/librarian-web/";
+			     	//alert(l);
+			     	
+			     	document.getElementById("results").innerHTML = "<h2>Authors</h2>";
+			     	document.getElementById("results").innerHTML += "<ul>";
+			     	for(i in jsonObj){
+			     		var authorlink = "http://localhost:8080/librarian-web/"+ jsonObj[i]['authorID'];
+			     		results.innerHTML += "<li><a href="+authorlink+">"+(jsonObj[i]['name'])+"</a></li>";
+			     	}
+			     	document.getElementById("results").innerHTML += "</ul>";
+			     	//document.getElementById("results").innerHTML += "<p>Proba</p>";
+			     
+			    }
+			}
+			
+
+		http_request.open("GET", data_file, true);
+		http_request.send();
+	}
+	
+	function listAllBooks(){
+		var data_file = "http://localhost:8080/librarian-web/books";
+		var http_request = new XMLHttpRequest();
+		
+		
+			http_request.onreadystatechange = function() {
+			    if (this.readyState == 4) {
+			     //document.getElementById("results").innerHTML = this.responseText;
+			     //createListingEnvironment();
+			    
+			     	var jsonObj = JSON.parse(http_request.responseText);
+			     	var i;
+			     	var l = jsonObj.length;
+			     	//var href = "http://localhost:8080/librarian-web/";
+			     	//alert(l);
+			     	
+			     	document.getElementById("results").innerHTML = "<h2>Bookss</h2>";
+			     	document.getElementById("results").innerHTML += "<ul>";
+			     	for(i in jsonObj){
+			     		var authorlink = "http://localhost:8080/librarian-web/"+ jsonObj[i]['bookID'];
+			     		results.innerHTML += "<li><a href="+authorlink+">"+(jsonObj[i]['title'])+"</a></li>";
+			     	}
+			     	document.getElementById("results").innerHTML += "</ul>";
+			     	//document.getElementById("results").innerHTML += "<p>Proba</p>";
+			     
+			    }
+			}
+			
+
+		http_request.open("GET", data_file, true);
+		http_request.send();
+	}
+	
+	function booksByTitle(bookname){
+		var data_file = "http://localhost:8080/librarian-web/booksByTitle/" + bookname;
+		var http_request = new XMLHttpRequest();
+		
+		
+			http_request.onreadystatechange = function() {
+			    if (this.readyState == 4) {
+			    			    
+			     	var jsonObj = JSON.parse(http_request.responseText);
+			     	var i;
+			     	var l = jsonObj.length;
+			     	
+			     	document.getElementById("results").innerHTML += "<h2>Books</h2>";
+			     	document.getElementById("results").innerHTML += "<ul>";
+			     	//var authName=jsonObj[i]['authors'][0]['name'];
+			     	for(i in jsonObj){
+			     		var o=jsonObj[i]['authors'];
+			     		if ( jsonObj[i]['authors'].length == 0) {
+			     			results.innerHTML += "<li>"+(jsonObj[i]['title'])+ "</li>";
+			     		} else {
+			     		    results.innerHTML += "<li>"+(jsonObj[i]['title'])+ " - "+(jsonObj[i]['authors'][0]['name'])+"</li>";
+			     		}
+			     	}
+			     	document.getElementById("results").innerHTML += "</ul>";
+			     	
+			     
+			    }
+			}
+			
+			http_request.open("GET", data_file, true);
+			http_request.send();
+	}
+
+	
+	
+	</script>
 </html>
