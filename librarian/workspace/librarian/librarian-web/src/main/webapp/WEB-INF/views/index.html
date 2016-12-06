@@ -1,35 +1,40 @@
 <html>
 <head>
-<script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/myStyle.css">
 </head>
 <body>
+	<div id="banner">
+		<div id="bannertextbox">
+			<h1 id="bannertext">Bodnar Attila - U1GU43</h1>
+		</div>
+	</div>
 	<div id="listBy">
-		<form action="">
+		<form action="" id="form1">
 		  	<fieldset>
-		    <legend>Search archive:</legend>
+		    <legend id="legend">Search archive:</legend>
 		    Search author filter:<br>
 		    <input type="text" name="authorname" value="Shakespeare"/>
-		    <button id="listFilteredAuthorsButton" type="button" onclick="authorsByName(authorname.value)">Search authors!</button>
+		    <button id="listFilteredAuthorsButton" type="button" onclick="authorsByName(authorname.value)">Search author!</button>
 		    <button id="listAllAuthorsButton" type="button" onclick="listAllAuthors()">List all authors!</button>
 		    <button id="createAuthor" type="button" onclick="createFormForAuthor()">Create new author!</button><br>
 		    <br>
 		    Browse :<br>
 		    <input type="text" name="bookname" value="Romeo and Juliet"/>
-		    <button id="listFilteredBooksButton" type="button" onclick="booksByTitle(bookname.value)">Search books!</button>
+		    <button id="listFilteredBooksButton" type="button" onclick="booksByTitle(bookname.value)">Search book!</button>
 		    <button id="listAllBooksButton" type="button" onclick="listAllBooks()">List all books!</button>
 		    <button id="createBook" type="button" onclick="createFormForBook()">Create new book!</button><br>
 		    <br>
 		  </fieldset>		 
 		</form>
+		<div id="results"></div>
 	</div>
-	<div id="results">Results:</div>
-	<div id="create"></div>
+	
 </body>
 <script type="text/javascript">
 
 	function createFormForBook(){
-		document.getElementById("create").innerHTML = "<form>" +
-		"<table><th>New Book</th>"+
+		document.getElementById("results").innerHTML = "<form>" +
+		"<table class="+"tableClass"+" align="+"center"+"><th>New Book</th>"+
 		"<tr><td>Title</td><td><input type='text' name='booktitle'/></td></tr>"+
 		"<tr><td colspan='2'><button name='createBook' onclick='submitNewBook(booktitle.value)'>Create</button></td></tr>"+
 		"</tr><table>"+
@@ -39,8 +44,8 @@
 
 
 	function createFormForAuthor(){
-		document.getElementById("create").innerHTML = "<form>" +
-		"<table><th>New Author</th>"+
+		document.getElementById("results").innerHTML = "<form>" +
+		"<table class="+"tableClass"+" align="+"center"+"><th>New Author</th>"+
 		"<tr><td>Name</td><td><input type='text' name='outname'/></td></tr>"+
 		"<tr><td>Nat</td><td><input type='text' name='outnat'/></td></tr>"+
 		"<tr><td>Birth Date (yyyy-mm-dd)</td><td><input type='text' name='outbirth'/></td></tr>"+
@@ -96,23 +101,19 @@
 		
 			http_request.onreadystatechange = function() {
 			    if (this.readyState == 4) {
-			     //document.getElementById("results").innerHTML = this.responseText;
-			     //createListingEnvironment();
 			    
 			     	var jsonObj = JSON.parse(http_request.responseText);
 			     	var i;
 			     	var l = jsonObj.length;
-			     	//var href = "http://localhost:8080/librarian-web/";
-			     	//alert(l);
+			     	
 			     	
 			     	document.getElementById("results").innerHTML = "<h2>Authors</h2>";
-			     	document.getElementById("results").innerHTML += "<ul>";
+			     	document.getElementById("results").innerHTML += "<ul align="+"center"+">";
 			     	for(i in jsonObj){
 			     		var authorlink = "http://localhost:8080/librarian-web/booksByAuthorId/"+ jsonObj[i]['authorID'];
 			     		results.innerHTML += "<li><a onclick=" + "getBooksByAuthorId(" +jsonObj[i]['authorID']+")>"+(jsonObj[i]['name'])+"</a></li>";
 			     	}
 			     	document.getElementById("results").innerHTML += "</ul>";
-			     	//document.getElementById("results").innerHTML += "<p>Proba</p>";
 			     
 			    }
 			}
@@ -129,14 +130,12 @@
 		
 			http_request.onreadystatechange = function() {
 			    if (this.readyState == 4) {
-			     //document.getElementById("results").innerHTML = this.responseText;
-			     //createListingEnvironment();
+			     
 			    
 			     	var jsonObj = JSON.parse(http_request.responseText);
 			     	var i;
 			     	var l = jsonObj.length;
-			     	//var href = "http://localhost:8080/librarian-web/";
-			     	//alert(l);
+			     	
 			     	
 			     	document.getElementById("results").innerHTML = "<h2>Books</h2>";
 			     	document.getElementById("results").innerHTML += "<ul>";
@@ -145,7 +144,6 @@
 			     	
 			     	}
 			     	document.getElementById("results").innerHTML += "</ul>";
-			     	//document.getElementById("results").innerHTML += "<p>Proba</p>";
 			     
 			    }
 			}
@@ -163,23 +161,18 @@
 		
 			http_request.onreadystatechange = function() {
 			    if (this.readyState == 4) {
-			     //document.getElementById("results").innerHTML = this.responseText;
-			     //createListingEnvironment();
 			    
 			     	var jsonObj = JSON.parse(http_request.responseText);
 			     	var i;
 			     	var l = jsonObj.length;
-			     	//var href = "http://localhost:8080/librarian-web/";
-			     	//alert(l);
 			     	
 			     	document.getElementById("results").innerHTML = "<h2>Authors</h2>";
 			     	document.getElementById("results").innerHTML += "<ul>";
 			     	for(i in jsonObj){
-			     		var authorlink = "http://localhost:8080/librarian-web/"+ jsonObj[i]['authorID'];
-			     		results.innerHTML += "<li><a href="+authorlink+">"+(jsonObj[i]['name'])+"</a></li>";
+			     		results.innerHTML += "<li>"+(jsonObj[i]['name'])+"</li>";
 			     	}
 			     	document.getElementById("results").innerHTML += "</ul>";
-			     	//document.getElementById("results").innerHTML += "<p>Proba</p>";
+			     	
 			     
 			    }
 			}
@@ -196,23 +189,18 @@
 		
 			http_request.onreadystatechange = function() {
 			    if (this.readyState == 4) {
-			     //document.getElementById("results").innerHTML = this.responseText;
-			     //createListingEnvironment();
+			     
 			    
 			     	var jsonObj = JSON.parse(http_request.responseText);
 			     	var i;
 			     	var l = jsonObj.length;
-			     	//var href = "http://localhost:8080/librarian-web/";
-			     	//alert(l);
 			     	
-			     	document.getElementById("results").innerHTML = "<h2>Bookss</h2>";
+			     	document.getElementById("results").innerHTML = "<h2>Books</h2>";
 			     	document.getElementById("results").innerHTML += "<ul>";
 			     	for(i in jsonObj){
-			     		var authorlink = "http://localhost:8080/librarian-web/"+ jsonObj[i]['bookID'];
-			     		results.innerHTML += "<li><a href="+authorlink+">"+(jsonObj[i]['title'])+"</a></li>";
+			     		results.innerHTML += "<li>"+(jsonObj[i]['title'])+"</li>";
 			     	}
 			     	document.getElementById("results").innerHTML += "</ul>";
-			     	//document.getElementById("results").innerHTML += "<p>Proba</p>";
 			     
 			    }
 			}
@@ -234,9 +222,9 @@
 			     	var i;
 			     	var l = jsonObj.length;
 			     	
-			     	document.getElementById("results").innerHTML += "<h2>Books</h2>";
+			     	document.getElementById("results").innerHTML = "<h2>Books</h2>";
 			     	document.getElementById("results").innerHTML += "<ul>";
-			     	//var authName=jsonObj[i]['authors'][0]['name'];
+			     	
 			     	for(i in jsonObj){
 			     		var o=jsonObj[i]['authors'];
 			     		if ( jsonObj[i]['authors'].length == 0) {
